@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Compare Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSV Compare Tool</h1>
+            <p>Compare two CSV files with multi-level matching and export missing records</p>
+        </header>
+
+        <main id="app">
+            <!-- Step 1: File Upload -->
+            <section id="upload-section" class="step-section active">
+                <h2>Step 1: Upload CSV Files</h2>
+                <div class="upload-grid">
+                    <div class="upload-zone" id="upload-zone-1">
+                        <div class="upload-content">
+                            <div class="upload-icon">📄</div>
+                            <h3>First CSV File</h3>
+                            <p>Drop your first CSV file here or click to browse</p>
+                            <input type="file" id="file1" accept=".csv" hidden>
+                            <button type="button" onclick="document.getElementById('file1').click()">Choose File</button>
+                        </div>
+                        <div class="file-info" id="file1-info" style="display: none;">
+                            <span class="file-name"></span>
+                            <span class="file-size"></span>
+                        </div>
+                    </div>
+
+                    <div class="upload-zone" id="upload-zone-2">
+                        <div class="upload-content">
+                            <div class="upload-icon">📄</div>
+                            <h3>Second CSV File</h3>
+                            <p>Drop your second CSV file here or click to browse</p>
+                            <input type="file" id="file2" accept=".csv" hidden>
+                            <button type="button" onclick="document.getElementById('file2').click()">Choose File</button>
+                        </div>
+                        <div class="file-info" id="file2-info" style="display: none;">
+                            <span class="file-name"></span>
+                            <span class="file-size"></span>
+                        </div>
+                    </div>
+                </div>
+                <button id="upload-btn" class="primary-btn" disabled>Process Files</button>
+            </section>
+
+            <!-- Step 2: Column Mapping -->
+            <section id="mapping-section" class="step-section">
+                <h2>Step 2: Configure Comparison Rules</h2>
+                <p>Set up primary and fallback comparison rules to match records between the files</p>
+
+                <div id="comparison-rules">
+                    <div class="rule-item" data-rule-index="0">
+                        <div class="rule-header">
+                            <h4>Primary Comparison Rule</h4>
+                            <span class="rule-priority">Priority: 1</span>
+                        </div>
+                        <div class="rule-config">
+                            <div class="column-selector">
+                                <label>First CSV Column:</label>
+                                <select id="rule-0-col1" class="column-select">
+                                    <option value="">Select column...</option>
+                                </select>
+                            </div>
+                            <div class="column-selector">
+                                <label>Second CSV Column:</label>
+                                <select id="rule-0-col2" class="column-select">
+                                    <option value="">Select column...</option>
+                                </select>
+                            </div>
+                            <div class="rule-name">
+                                <label>Rule Name:</label>
+                                <input type="text" id="rule-0-name" placeholder="e.g., User ID Match" value="Primary Match">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="add-rule-btn" class="secondary-btn">Add Fallback Rule</button>
+                <button id="compare-btn" class="primary-btn" disabled>Run Comparison</button>
+            </section>
+
+            <!-- Step 3: Results -->
+            <section id="results-section" class="step-section">
+                <h2>Step 3: Comparison Results</h2>
+
+                <div id="statistics" class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-records">-</div>
+                        <div class="stat-label">Total Records (File 1)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="matches-found">-</div>
+                        <div class="stat-label">Matches Found</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="missing-records">-</div>
+                        <div class="stat-label">Missing Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="match-rate">-</div>
+                        <div class="stat-label">Match Rate</div>
+                    </div>
+                </div>
+
+                <div class="results-tabs">
+                    <button class="tab-btn active" data-tab="missing">Missing Records</button>
+                    <button class="tab-btn" data-tab="matches">Matches Found</button>
+                </div>
+
+                <div id="results-table-container">
+                    <div id="missing-tab" class="tab-content active">
+                        <div class="table-header">
+                            <h3>Records from File 1 with no matches in File 2</h3>
+                            <button id="export-missing-btn" class="secondary-btn">Export Missing Records</button>
+                        </div>
+                        <div id="missing-table" class="data-table"></div>
+                    </div>
+
+                    <div id="matches-tab" class="tab-content">
+                        <div class="table-header">
+                            <h3>Successfully Matched Records</h3>
+                            <button id="export-matches-btn" class="secondary-btn">Export Matches</button>
+                        </div>
+                        <div id="matches-table" class="data-table"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="loading" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p id="loading-text">Processing...</p>
+            </div>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;">
+            <span class="error-text"></span>
+            <button onclick="hideError()" class="close-btn">×</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
